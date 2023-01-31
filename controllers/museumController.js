@@ -24,6 +24,8 @@ const museumController = {
           return res.status(422).json({ errors: errors.array() });
         }
 
+        
+
         let muse = new museum({
             title: req.body.title,
             description: req.body.description
