@@ -1,4 +1,6 @@
+const { validationResult } = require("express-validator");
 const { museum } = require("../models/Museum")
+
 
 
 
@@ -16,6 +18,12 @@ const museumController = {
 
     },
     add: (req, res) => {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(422).json({ errors: errors.array() });
+        }
+
         let muse = new museum({
             title: req.body.title,
             description: req.body.description
