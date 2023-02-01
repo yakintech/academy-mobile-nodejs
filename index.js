@@ -54,7 +54,7 @@ app.post('/token', (req, res) => {
 
     if (email == 'a@a.com' && password == '123') {
         let token = jwt.sign({ email: email }, privateKey, {
-            expiresIn: '10s',
+            expiresIn: '1d',
             algorithm: 'HS256'
         })
 
