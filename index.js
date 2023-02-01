@@ -2,7 +2,7 @@ const express = require('express');
 const { default: mongoose } = require('mongoose');
 const { category, product, supplier } = require('./models/Product');
 const museumRouter = require('./router/museumRouter')
-
+var jwt = require('jsonwebtoken');
 const app = express();
 
 app.use(express.json());
@@ -16,32 +16,55 @@ mongoose.connect('mongodb+srv://cagatay:jYjpMvn5WXivq4uh@cluster0.imfaisw.mongod
         console.log('Error', err);
     })
 
+let privateKey = "codePrivateKey";
 
-    // let newSupplier = new supplier({
-    //     companyName: 'Code Academy',
-    //     contactName : "Çağatay"
-    // });
+app.use((req, res, next) => {
 
-    // newSupplier.save();
+    if (req.url == '/token')
+        next();
+    let auth = req.headers.authorization;
 
-    // let newproduct = new product({
-    //     name:'Samsung',
-    //     unitPrice:3000,
-    //     stock:55,
-    //     category: '63d8c6ab7c218e3ad619b175',
-    //     supplier: '63d8c86298f3f4858e4d25c4'
-    // });
+    if (auth != undefined) {
+        let token = auth.split(' ')[1];
 
-    // newproduct.save();
+        jwt.verify(token, privateKey, function (err, decode) {
+            if (err)
+                res.status(401).json({ 'message': 'token error!' })
+            else
+                next();
+        })
+    }
+    else {
+        res.status(401).json({ 'message': 'token error!' })
+    }
 
-    // newproduct.save();
-
-    product.find({}).populate('category supplier').exec((err,docs) => {
-        console.log('Docs', docs);
-    })
-
+})
 
 
+product.find({}).populate('category supplier').exec((err, docs) => {
+    console.log('Docs', docs);
+})
+
+
+
+app.post('/token', (req, res) => {
+
+    let email = req.body.email;
+    let password = req.body.password;
+
+    if (email == 'a@a.com' && password == '123') {
+        let token = jwt.sign({ email: email }, privateKey, {
+            expiresIn: '10s',
+            algorithm: 'HS256'
+        })
+
+        res.json({ 'token': token });
+    }
+    else {
+        res.status(401).json({ 'message': 'password error!' })
+    }
+
+})
 
 
 app.get('/', (req, res) => {
