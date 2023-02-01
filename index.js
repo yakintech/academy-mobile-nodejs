@@ -1,7 +1,9 @@
 const express = require('express');
 const { default: mongoose } = require('mongoose');
-const { category, product, supplier } = require('./models/Product');
-const museumRouter = require('./router/museumRouter')
+const { product } = require('./models/Product');
+const museumRouter = require('./router/museumRouter');
+const tokenRouter = require('./router/tokenRouter');
+
 var jwt = require('jsonwebtoken');
 const app = express();
 
@@ -21,8 +23,8 @@ let privateKey = "codePrivateKey";
 app.use((req, res, next) => {
 
     if (req.url == '/token')
-        next();
-    let auth = req.headers.authorization;
+        return next();
+    let auth = req.headers?.authorization;
 
     if (auth != undefined) {
         let token = auth.split(' ')[1];
@@ -41,37 +43,22 @@ app.use((req, res, next) => {
 })
 
 
+app.use('/api/museums', museumRouter)
+app.use('/token', tokenRouter)
+
 product.find({}).populate('category supplier').exec((err, docs) => {
     console.log('Docs', docs);
 })
 
 
 
-app.post('/token', (req, res) => {
-
-    let email = req.body.email;
-    let password = req.body.password;
-
-    if (email == 'a@a.com' && password == '123') {
-        let token = jwt.sign({ email: email }, privateKey, {
-            expiresIn: '1d',
-            algorithm: 'HS256'
-        })
-
-        res.json({ 'token': token });
-    }
-    else {
-        res.status(401).json({ 'message': 'password error!' })
-    }
-
-})
 
 
 app.get('/', (req, res) => {
     res.send('Hello!');
 })
 
-app.use('/api/museums', museumRouter)
+
 
 
 app.listen(8080);
