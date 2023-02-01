@@ -5,7 +5,7 @@ let privateKey = "codePrivateKey";
 
 const tokenController = {
     tokenControl: (req, res) => {
-        let email = req.body.email;
+        let email = req.body.email.toLowerCase().trim();
         let password = req.body.password;
 
         webUserModel.findOne({ email: email, password: password }, (err, doc) => {

@@ -46,13 +46,6 @@ app.use((req, res, next) => {
 app.use('/api/museums', museumRouter)
 app.use('/token', tokenRouter)
 
-product.find({}).populate('category supplier').exec((err, docs) => {
-    console.log('Docs', docs);
-})
-
-
-
-
 
 app.get('/', (req, res) => {
     res.send('Hello!');
