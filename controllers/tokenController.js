@@ -1,8 +1,8 @@
 const { webUserModel } = require("../models/WebUser")
 require('dotenv').config()
 var jwt = require('jsonwebtoken');
-let privateKey = process.env.tokenPrivateKey;
-
+// let privateKey = process.env.tokenPrivateKey;
+let privateKey = 'codePrivateKey'
 
 
 const tokenController = {

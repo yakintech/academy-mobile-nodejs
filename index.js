@@ -20,8 +20,8 @@ mongoose.connect('mongodb+srv://cagatay:jYjpMvn5WXivq4uh@cluster0.imfaisw.mongod
         console.log('Error', err);
     })
 
-let privateKey = process.env.tokenPrivateKey;
-
+// let privateKey = process.env.tokenPrivateKey;
+let privateKey = 'codePrivateKey'
 
 app.use((req, res, next) => {
 
