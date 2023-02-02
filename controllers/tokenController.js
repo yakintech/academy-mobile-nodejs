@@ -29,23 +29,17 @@ const tokenController = {
             }
         })
     },
-    tokenControl: (req,res) => {
+    tokenControl: (req, res) => {
 
-        let auth = req.headers?.authorization;
+        let token = req.body.token;
 
-        if (auth != undefined) {
-            let token = auth.split(' ')[1];
-    
-            jwt.verify(token, privateKey, function (err, decode) {
-                if (err)
-                    res.status(401).json({ 'message': 'token error1!' })
-                else
-                    res.send('OK!');
-            })
-        }
-        else {
-            res.status(401).json({ 'message': 'token error2!' })
-        }
+        jwt.verify(token, privateKey, function (err, decode) {
+            if (err)
+                res.status(401).json({ 'message': 'token error1!' })
+            else
+                res.send('OK!');
+        })
+
 
     }
 }
