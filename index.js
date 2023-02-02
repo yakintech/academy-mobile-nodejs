@@ -25,7 +25,7 @@ let privateKey = 'codePrivateKey'
 
 app.use((req, res, next) => {
 
-    if (req.url == '/token')
+    if (req.url == '/token' || req.url == '/token/tokencontrol')
         return next();
     let auth = req.headers?.authorization;
 
