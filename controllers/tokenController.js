@@ -38,13 +38,13 @@ const tokenController = {
     
             jwt.verify(token, privateKey, function (err, decode) {
                 if (err)
-                    res.status(401).json({ 'message': 'token error!' })
+                    res.status(401).json({ 'message': 'token error1!' })
                 else
                     res.send('OK!');
             })
         }
         else {
-            res.status(401).json({ 'message': 'token error!' })
+            res.status(401).json({ 'message': 'token error2!' })
         }
 
     }
