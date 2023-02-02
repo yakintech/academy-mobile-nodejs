@@ -1,10 +1,12 @@
 const { webUserModel } = require("../models/WebUser")
+require('dotenv').config()
 var jwt = require('jsonwebtoken');
-let privateKey = "codePrivateKey";
+let privateKey = process.env.tokenPrivateKey;
+
 
 
 const tokenController = {
-    tokenControl: (req, res) => {
+    login: (req, res) => {
         let email = req.body.email.toLowerCase().trim();
         let password = req.body.password;
 
@@ -15,7 +17,6 @@ const tokenController = {
                         expiresIn: '1d',
                         algorithm: 'HS256'
                     })
-                    console.log('token', token);
                     res.json({ 'token': token });
                     return;
                 }
@@ -27,6 +28,25 @@ const tokenController = {
                 res.status(500).json(err);
             }
         })
+    },
+    tokenControl: (req,res) => {
+
+        let auth = req.headers?.authorization;
+
+        if (auth != undefined) {
+            let token = auth.split(' ')[1];
+    
+            jwt.verify(token, privateKey, function (err, decode) {
+                if (err)
+                    res.status(401).json({ 'message': 'token error!' })
+                else
+                    res.send('OK!');
+            })
+        }
+        else {
+            res.status(401).json({ 'message': 'token error!' })
+        }
+
     }
 }
 

@@ -4,6 +4,8 @@ const { product } = require('./models/Product');
 const museumRouter = require('./router/museumRouter');
 const tokenRouter = require('./router/tokenRouter');
 
+require('dotenv').config()
+
 var jwt = require('jsonwebtoken');
 const app = express();
 
@@ -18,7 +20,8 @@ mongoose.connect('mongodb+srv://cagatay:jYjpMvn5WXivq4uh@cluster0.imfaisw.mongod
         console.log('Error', err);
     })
 
-let privateKey = "codePrivateKey";
+let privateKey = process.env.tokenPrivateKey;
+
 
 app.use((req, res, next) => {
 
@@ -43,8 +46,8 @@ app.use((req, res, next) => {
 })
 
 
-app.use('/api/museums', museumRouter)
-app.use('/token', tokenRouter)
+app.use('/api/museums', museumRouter);
+app.use('/token', tokenRouter);
 
 
 app.get('/', (req, res) => {
