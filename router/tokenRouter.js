@@ -3,7 +3,8 @@ const { tokenController } = require('../controllers/tokenController');
 const router = express.Router();
 
 
-router.post('/', tokenController.login);
+router.post('/login', tokenController.login);
+router.post('/', tokenController.token);
 router.post('/tokencontrol', tokenController.tokenControl);
 
 

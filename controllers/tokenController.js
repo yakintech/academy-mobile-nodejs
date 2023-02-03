@@ -48,13 +48,6 @@ const tokenController = {
 
                     })
 
-
-                    // let token = jwt.sign({ email: email }, privateKey, {
-                    //     expiresIn: '1d',
-                    //     algorithm: 'HS256'
-                    // })
-                    // res.json({ 'token': token });
-                    // return;
                 }
                 else {
                     res.status(401).json({ 'message': 'password error!' })
@@ -76,6 +69,27 @@ const tokenController = {
                 res.send('OK!');
         })
 
+
+    },
+    token: (req, res) => {
+
+        let confirmCode = req.body.confirmCode;
+        let webUserId = req.body.webUserId;
+
+        webUserModel.findOne({confirmCode: confirmCode, webUserId: webUserId}, (err,doc) => {
+            if(!err){
+
+                if(doc){
+                    res.json(doc);
+                }
+                else{
+                    res.status(404).json({'messsage':'Not found!'});
+                }
+            }
+            else{
+                res.status(500).json(err)
+            }
+        })
 
     }
 }
