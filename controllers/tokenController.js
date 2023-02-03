@@ -1,8 +1,19 @@
 const { webUserModel } = require("../models/WebUser")
 require('dotenv').config()
 var jwt = require('jsonwebtoken');
-// let privateKey = process.env.tokenPrivateKey;
-let privateKey = 'codePrivateKey'
+let privateKey = 'codePrivateKey';
+var nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    direct: true,
+    host: 'smtp.yandex.com',
+    port: 465,
+    auth: {
+        user: 'cagatay.yildiz@neominal.com',
+        pass: 'xpioqsemuckxloiv'
+    },
+    secure: true
+})
 
 
 const tokenController = {
@@ -13,12 +24,37 @@ const tokenController = {
         webUserModel.findOne({ email: email, password: password }, (err, doc) => {
             if (!err) {
                 if (doc) {
-                    let token = jwt.sign({ email: email }, privateKey, {
-                        expiresIn: '1d',
-                        algorithm: 'HS256'
+
+                    let confirmCode = Math.floor(Math.random() * 999999);
+
+                    doc.confirmCode = confirmCode;
+                    doc.save((saveErr, saveDoc) => {
+
+
+                        var mailOptions = {
+                            from: 'cagatay.yildiz@neominal.com',
+                            to: doc.email,
+                            subject: 'Confirm Code',
+                            text: 'Confirm Code: ' + confirmCode
+                        };
+
+                        transporter.sendMail(mailOptions, function (error, info) {
+                            if (error) {
+                                return console.log(error);
+                            }
+                            return res.json({ webUserId: saveDoc._id });
+                        });
+
+
                     })
-                    res.json({ 'token': token });
-                    return;
+
+
+                    // let token = jwt.sign({ email: email }, privateKey, {
+                    //     expiresIn: '1d',
+                    //     algorithm: 'HS256'
+                    // })
+                    // res.json({ 'token': token });
+                    // return;
                 }
                 else {
                     res.status(401).json({ 'message': 'password error!' })

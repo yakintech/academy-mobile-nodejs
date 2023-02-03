@@ -4,6 +4,7 @@ const { product } = require('./models/Product');
 const museumRouter = require('./router/museumRouter');
 const tokenRouter = require('./router/tokenRouter');
 
+
 require('dotenv').config()
 
 var jwt = require('jsonwebtoken');
@@ -25,8 +26,6 @@ let privateKey = 'codePrivateKey'
 
 app.use((req, res, next) => {
 
-    return next();
-    console.log(req.url);
     if (req.url == '/token' || req.url == '/token/tokencontrol')
         return next();
     let auth = req.headers?.authorization;
@@ -55,8 +54,6 @@ app.use('/token', tokenRouter);
 app.get('/', (req, res) => {
     res.send('Hello!');
 })
-
-
 
 
 app.listen(8080);
