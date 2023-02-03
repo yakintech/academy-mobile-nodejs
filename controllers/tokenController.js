@@ -76,17 +76,21 @@ const tokenController = {
         let confirmCode = req.body.confirmCode;
         let webUserId = req.body.webUserId;
 
-        webUserModel.findOne({confirmCode: confirmCode, webUserId: webUserId}, (err,doc) => {
-            if(!err){
+        webUserModel.findOne({ confirmCode: confirmCode, webUserId: webUserId }, (err, doc) => {
+            if (!err) {
 
-                if(doc){
-                    res.json(doc);
+                if (doc) {
+                    let token = jwt.sign({ email: doc.email }, privateKey, {
+                        expiresIn: '1d',
+                        algorithm: 'HS256'
+                    })
+                   return res.json({ 'token': token });
                 }
-                else{
-                    res.status(404).json({'messsage':'Not found!'});
+                else {
+                    res.status(404).json({ 'messsage': 'Not found!' });
                 }
             }
-            else{
+            else {
                 res.status(500).json(err)
             }
         })
