@@ -4,7 +4,6 @@ const { product } = require('./models/Product');
 const museumRouter = require('./router/museumRouter');
 const tokenRouter = require('./router/tokenRouter');
 
-
 require('dotenv').config()
 
 var jwt = require('jsonwebtoken');
@@ -13,9 +12,40 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded())
 
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+    }
+});
+
+
+
+io.on('connection', (socket) => {
+
+    socket.on('chatMessage', (data) => {
+
+        io.emit("chatMessage2", data);
+
+    })
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+
+})
+
+
+
+
+
+
+
 mongoose.connect('mongodb+srv://cagatay:jYjpMvn5WXivq4uh@cluster0.imfaisw.mongodb.net/academy-mobile-db')
     .then(res => {
-        console.log('Connected!!');
+        // console.log('Connected!!');
     })
     .catch(err => {
         console.log('Error', err);
@@ -56,6 +86,6 @@ app.get('/', (req, res) => {
 })
 
 
-app.listen(8080);
+server.listen(8080);
 
 

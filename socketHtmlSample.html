@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div>
+        <label>Message</label>
+        <input type="text" name="" id="message">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <div>
+        <ul id="messages"></ul>
+    </div>
+</body>
+<script>
+    const socket = io('http://localhost:8080');
+
+    function sendMessage(){
+        let message = document.getElementById('message').value;
+        socket.emit('chatMessage', message)
+    }
+
+
+    socket.on('chatMessage2', (data) => {
+        
+        let liElement = document.createElement('li');
+        liElement.innerHTML = data;
+        document.getElementById('messages').appendChild(liElement);
+
+    })
+</script>
+</html>
