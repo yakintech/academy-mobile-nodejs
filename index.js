@@ -4,6 +4,9 @@ const { product } = require('./models/Product');
 const museumRouter = require('./router/museumRouter');
 const tokenRouter = require('./router/tokenRouter');
 
+const fs = require('fs');
+
+
 require('dotenv').config()
 
 var jwt = require('jsonwebtoken');
@@ -30,6 +33,19 @@ io.on('connection', (socket) => {
         io.emit("chatMessage2", data);
 
     })
+
+    socket.on('upload', (data) => {
+
+        console.log('upload ', data);
+        
+        // fs.writeFile('/temp',data, (err) => {
+        //     console.log('err', err);
+        //   })
+
+        io.emit('upload2', data);
+    })
+
+
 
     socket.on('disconnect', () => {
         console.log('user disconnected');

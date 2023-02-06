@@ -1,37 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"
+        integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI"
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
     <div>
         <label>Message</label>
         <input type="text" name="" id="message">
+        <input type="file" onchange="upload(this.files)" />
+
         <button onclick="sendMessage()">Send</button>
     </div>
     <div>
         <ul id="messages"></ul>
     </div>
+    <img src="" id="photo" alt="">
 </body>
 <script>
     const socket = io('http://localhost:8080');
 
-    function sendMessage(){
+    function sendMessage() {
         let message = document.getElementById('message').value;
-        socket.emit('chatMessage', message)
+
+        const d = new Date();
+
+        let dateString = d.getHours() + ":" + d.getMinutes();
+        let messageData = {
+            message: message,
+            date: dateString
+        }
+        socket.emit('chatMessage', messageData)
     }
 
 
+    function upload(files) {
+        console.log('files', files);
+        socket.emit("upload", files[0]);
+    }
+
+    socket.on('upload2', (data) => {
+        console.log('Data ', data);
+
+        var arrayBufferView = new Uint8Array(data);
+        var blob = new Blob([arrayBufferView], { type: "image/jpeg" });
+        var urlCreator = window.URL || window.webkitURL;
+        var imageUrl = urlCreator.createObjectURL(blob);
+        var img = document.querySelector("#photo");
+        img.src = imageUrl;
+    })
+
     socket.on('chatMessage2', (data) => {
-        
+
         let liElement = document.createElement('li');
-        liElement.innerHTML = data;
+        liElement.innerHTML = data.message + " " + data.date;
         document.getElementById('messages').appendChild(liElement);
 
     })
 </script>
+
 </html>
