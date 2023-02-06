@@ -36,15 +36,13 @@ io.on('connection', (socket) => {
 
     socket.on('upload', (data) => {
 
-        console.log('upload ', data);
-        
-        // fs.writeFile('/temp',data, (err) => {
-        //     console.log('err', err);
-        //   })
+        var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
 
         io.emit('upload2', data);
-    })
+        io.emit('upload3', base64String);
 
+    })
+    
 
 
     socket.on('disconnect', () => {
